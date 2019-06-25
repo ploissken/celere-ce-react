@@ -1,14 +1,21 @@
 import React from 'react'
-import { Segment } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import Header from './components/Header'
+import NewsGrid from './components/NewsGrid'
 import './App.css'
 
 function App() {
   return (
-    <Segment>
-      <Header />
-      <h2> olar </h2>
-    </Segment>
+    <Grid columns={1} style={{'height': '100vh'}}>
+      <Grid.Row>
+        <Header />
+      </Grid.Row>
+      <Grid.Row style={{'height': '100%'}}>
+        <Grid.Column>
+          <NewsGrid />
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
   )
 }
 
