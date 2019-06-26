@@ -1,6 +1,9 @@
 const initialSettings = {
-  fullData: [],
-  filteredData: []
+  rawData: [],
+  filteredData: {
+    columns: [],
+    rows: []
+  }
 }
 
 const dataReducer = (state = initialSettings, action) => {
@@ -9,13 +12,16 @@ const dataReducer = (state = initialSettings, action) => {
       console.log('dataset data_load')
       return {
         ...state,
-        fullData: [...action.data],
-        filteredData: [...action.data]
+        rawData: [...action.data]
       }
     case 'FILTER_DATA':
     console.log('dataset filter_data')
       return {
-        ...state
+        ...state,
+        filteredData: {
+          columns: [...action.columns],
+          rows: [...action.rows]
+        }
       }
     default:
       console.log('dataset default')

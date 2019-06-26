@@ -1,51 +1,43 @@
 import React from 'react';
 import { Segment, Item, Grid } from 'semantic-ui-react'
 import NewsItem from 'components/NewsItem'
+import NewsCard from 'components/NewsCard'
 import { connect } from 'react-redux'
 import api from 'api'
 
-class NewsGrid extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      columns: [],
-      rows: []
-    }
-  }
+const padded = { 'paddingTop': '2em' }
 
+class NewsGrid extends React.Component {
   componentDidMount() {
     api().get().then(apiData => {
-      console.log(apiData)
+      apiData.articles.sort(function(a,b) {
+        return new Date(b.publishedAt) - new Date(a.publishedAt)
+      })
       this.props.dispatch({
         type:'DATA_LOADED',
         data: apiData.articles
       })
 
-      // tiny workaround to display a loading
-      // (proper solution require redux-thunk middleware)
-      setTimeout(() => { this.createDisplayItens() }, 1000)
+      let cols = []
+      let rows = []
+      apiData.articles.forEach(newsPost => {
+        rows.push(<NewsItem data={newsPost} key={newsPost.url}/>)
+        cols.push(
+          <Grid.Column key={newsPost.url}>
+            <NewsCard data={newsPost} />
+          </Grid.Column>)
+      })
+      this.props.dispatch({
+        type: 'FILTER_DATA',
+        rows: rows,
+        columns: cols
+      })
     })
   }
 
-  createDisplayItens() {
-    let cols = []
-    let rows = []
-    console.log('creating display itens')
-    if(this.props.data.filteredData.length) {
-      console.log('in da if creating display itens')
-      this.props.data.filteredData.forEach(newsPost => {
-        rows.push(<NewsItem data={newsPost} key={newsPost.url}/>)
-        // cols.push(<NewsCard data={newsPost} key={newsPost.url}/>)
-      })
-    }
-    this.setState({ columns: cols, rows: rows })
-    console.log('done', rows)
-  }
-
   render() {
-    if(!this.state.rows.length) {
-      console.log('in da if bitch')
-      console.log(this.state.rows.length)
+    if (!this.props.data.filteredData.rows.length) {
+      // no data yet, display loading
       return (
         <Segment
           loading
@@ -54,25 +46,45 @@ class NewsGrid extends React.Component {
         </Segment>
       )
     } else {
-      console.log(this.state.rows.length)
-      return (
-        <Grid className={this.props.settings.darkmode ? 'dark-item' : ''}>
-          <Grid.Row>
-            <Grid.Column width={1}/>
-            <Grid.Column width={14}>
-              <Item.Group relaxed="very" style={{'paddingTop': '2em'}}>
-                {this.state.rows}
-              </Item.Group>
-            </Grid.Column>
-            <Grid.Column width={1}/>
-          </Grid.Row>
-        </Grid>
-      )
+      // view data as list items
+      if (this.props.settings.listview) {
+        return (
+          <Grid className={this.props.settings.darkmode ? 'dark-item' : ''}>
+            <Grid.Row>
+              <Grid.Column width={1}/>
+              <Grid.Column width={14}>
+                <Item.Group relaxed="very" style={padded}>
+                  {this.props.data.filteredData.rows}
+                </Item.Group>
+              </Grid.Column>
+              <Grid.Column width={1}/>
+            </Grid.Row>
+          </Grid>
+        )
+      } else {
+        // view data as column cards
+        return (
+          <Grid
+            style={padded}
+            className={this.props.settings.darkmode ? 'dark-item' : ''}>
+            <Grid.Row>
+              <Grid.Column width={1}/>
+              <Grid.Column width={14}>
+                <Grid stackable padded columns={4}
+                  className={this.props.settings.darkmode ? 'dark-item' : ''}>
+                  {this.props.data.filteredData.columns}
+                </Grid>
+              </Grid.Column>
+              <Grid.Column width={1}/>
+            </Grid.Row>
+          </Grid>
+        )
+      }
     }
   }
 }
 
-// connect component and state-store, to use state as props
+// connect component and state
 const mapStateToProps = (state) => {
   return {
     settings: state.settings,

@@ -18,3 +18,7 @@
 .dark-item .description {
   color: #DDD!important;
 }
+
+.dark-item .card {
+  background-color: #222!important;
+}

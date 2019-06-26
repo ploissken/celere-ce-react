@@ -3,7 +3,7 @@ import { Item } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 function dateParse(d) {
-  return new Date(d).toLocaleString('pt-BR', {
+  return new Date(d).toLocaleString('en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric' })
