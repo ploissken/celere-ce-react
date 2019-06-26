@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-// import api from 'api'
+import FilterInput from 'components/FilterInput'
 
 class HeaderMenu extends Component {
   darkModeUpdate = (e => {
@@ -25,6 +25,9 @@ class HeaderMenu extends Component {
         color={this.props.settings.darkmode ? 'grey' : 'black'}>
         <Menu.Item> celere-ce </Menu.Item>
         <Menu.Menu position='right'>
+          <Menu.Item>
+            <FilterInput />
+          </Menu.Item>
           <Menu.Item name='darkmode' onClick={this.darkModeUpdate}>
             <Icon name={this.props.settings.darkmode ? 'sun' : 'moon'}
               className={this.props.settings.darkmode ? 'yellow loading' : ''}

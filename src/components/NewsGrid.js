@@ -49,7 +49,9 @@ class NewsGrid extends React.Component {
       // view data as list items
       if (this.props.settings.listview) {
         return (
-          <Grid className={this.props.settings.darkmode ? 'dark-item' : ''}>
+          <Grid
+            style={{...padded, 'minHeight': '100vh'}}
+            className={this.props.settings.darkmode ? 'dark-item' : ''}>
             <Grid.Row>
               <Grid.Column width={1}/>
               <Grid.Column width={14}>
@@ -65,7 +67,7 @@ class NewsGrid extends React.Component {
         // view data as column cards
         return (
           <Grid
-            style={padded}
+            style={{...padded, 'minHeight': '100vh'}}
             className={this.props.settings.darkmode ? 'dark-item' : ''}>
             <Grid.Row>
               <Grid.Column width={1}/>

@@ -22,3 +22,7 @@
 .dark-item .card {
   background-color: #222!important;
 }
+
+.dark-input input {
+  background-color: #555!important;
+}
